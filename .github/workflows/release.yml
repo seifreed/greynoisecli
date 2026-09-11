@@ -83,3 +83,36 @@ jobs:
 
       - name: Publish distributions
         uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
+
+  github-release:
+    name: Create GitHub release
+    needs: publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download distributions
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: python-package-distributions
+          path: dist/
+
+      - name: Write release notes
+        run: |
+          cat > RELEASE_NOTES.md <<'EOF'
+          This is the first public release of greynoisecli.
+
+          greynoisecli provides a typed Python command-line client for the GreyNoise API, with coverage for every documented API operation, structured output formats, safe file writes, and strict CI checks across Linux, Windows, and macOS.
+
+          The release includes source and wheel distributions published to PyPI via trusted OIDC publishing.
+          EOF
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/* \
+            --title "greynoisecli $GITHUB_REF_NAME" \
+            --notes-file RELEASE_NOTES.md
