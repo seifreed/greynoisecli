@@ -1,0 +1,61 @@
+[build-system]
+requires = ["setuptools==84.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "greynoisecli"
+version = "0.1.0"
+description = "GreyNoise API client and command-line interface"
+readme = "README.md"
+requires-python = ">=3.14,<3.15"
+authors = [{ name = "Marc R." }]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Information Technology",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.14",
+    "Typing :: Typed",
+]
+dependencies = ["rich==15.0.0"]
+
+[project.urls]
+Homepage = "https://github.com/seifreed/greynoisecli"
+Repository = "https://github.com/seifreed/greynoisecli"
+Issues = "https://github.com/seifreed/greynoisecli/issues"
+
+[project.scripts]
+greynoise = "greynoisecli.cli:main"
+
+[dependency-groups]
+dev = [
+    "bandit==1.9.4",
+    "black==26.5.1",
+    "build==1.6.0",
+    "mypy==2.3.1",
+    "pip-audit==2.10.1",
+    "pytest==9.1.1",
+    "pytest-cov==7.1.0",
+    "ruff==0.16.6",
+]
+
+[tool.black]
+target-version = ["py314"]
+
+[tool.ruff]
+target-version = "py314"
+
+[tool.ruff.lint]
+select = ["B", "C90", "E", "F", "I", "PLR", "SIM", "UP"]
+
+[tool.mypy]
+python_version = "3.14"
+strict = true
+packages = ["greynoisecli"]
+
+[tool.pytest.ini_options]
+addopts = "--cov=greynoisecli --cov-report=term-missing --cov-fail-under=100"
+testpaths = ["tests"]
+
+[tool.coverage.run]
+source = ["greynoisecli"]
